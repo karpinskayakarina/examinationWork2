@@ -21,4 +21,8 @@ export default class AuthPage {
   verifyDisabledAuthButton() {
     cy.get("#loginButton").should("be.disabled");
   }
+
+  clickRememberMe() {
+    cy.get("#rememberMe").click();
+  }
 }

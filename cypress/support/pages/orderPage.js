@@ -1,9 +1,13 @@
 import { apiEndpoints } from "../endpoints";
 
 export default class OrderPage {
-  visit() {
+  visitLogin() {
     cy.visit("/#/login");
     cy.closeBanners();
+  }
+
+  visitSearch() {
+    cy.visit("/#/search");
   }
 
   verifyProductsOnPage() {
@@ -41,8 +45,12 @@ export default class OrderPage {
     cy.get("[routerLink='/address/create']").click();
   }
 
-  clickNextButton() {
+  clickBtnNext() {
     cy.get(".mat-focus-indicator .btn-next").click();
+  }
+
+  clickNextButton() {
+    cy.get(".mat-focus-indicator .nextButton").click();
   }
 
   verifyAddressSuccessufullyAdded() {
@@ -105,6 +113,10 @@ export default class OrderPage {
     );
   }
 
+  addToCartMelonBike() {
+    cy.get(".btn-basket .mat-button-wrapper").eq(10).click();
+  }
+
   verifyProductMelonBikeInCard() {
     cy.contains(
       "Placed Melon Bike (Comeback-Product 2018 Edition) into basket."
@@ -134,5 +146,19 @@ export default class OrderPage {
 
   verifySubmitButtonIsDisabled() {
     cy.get("#submitButton").should("be.disabled");
+  }
+
+  addToCartBestJuiceShopSalesman() {
+    cy.get(".btn-basket .mat-button-wrapper").eq(3).click();
+  }
+
+  addToCartAppleJuice() {
+    cy.get(".btn-basket .mat-button-wrapper").eq(0).click();
+  }
+
+  verifyValidCardNumber() {
+    cy.contains("Please enter a valid sixteen digit card number.").should(
+      "be.visible"
+    );
   }
 }

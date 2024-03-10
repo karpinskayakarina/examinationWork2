@@ -13,7 +13,7 @@ it.skip("Feedback form", () => {
   authPage.fillLoginForm(user.email, user.password);
   reviewPage.visit();
   orderPage.verifyProductsOnPage();
-  cy.get(".product").eq(1).click();
+  reviewPage.addToCartApplePomace();
   cy.contains("Reviews").should("be.visible");
 
   let initialFeedbackCount;

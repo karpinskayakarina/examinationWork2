@@ -6,39 +6,39 @@ describe("Authorization", () => {
   const authPage = new AuthPage();
 
   beforeEach(() => {
-    cy.log("Відвідання сторінки авторизації");
+    cy.log("Visiting the authorization page");
     authPage.visit();
   });
 
   it("should login with valid credentials", () => {
-    cy.log("Вхід з дійсними обліковими даними");
+    cy.log("Logging in with valid credentials");
     authPage.fillLoginForm(user.email, user.password);
     authPage.verifyLoginSuccessMessage();
   });
 
   it("should login with valid credentials and Remember Me Checkbox", () => {
-    cy.log("Вхід з дійсними обліковими даними та прапорцем 'Запам'ятати мене'");
-    cy.get("#rememberMe").click();
+    cy.log("Logging in with valid credentials and Remember Me checkbox");
+    authPage.clickRememberMe();
     authPage.fillLoginForm(user.email, user.password);
     authPage.verifyLoginSuccessMessage();
   });
 
   it("should not login with invalid email", () => {
-    cy.log("Спроба входу з недійсною електронною адресою");
+    cy.log("Attempting to login with invalid email");
     const { invalidEmail, validPassword } = TestData;
     authPage.fillLoginForm(invalidEmail, validPassword);
     authPage.verifyErrorMessage();
   });
 
   it("should not login with incorrect password", () => {
-    cy.log("Спроба входу з неправильним паролем");
+    cy.log("Attempting to login with incorrect password");
     const { validEmail, weakPassword } = TestData;
     authPage.fillLoginForm(validEmail, weakPassword);
     authPage.verifyErrorMessage();
   });
 
   it("should not login without providing email and password", () => {
-    cy.log("Спроба входу без введення електронної адреси та пароля");
+    cy.log("Attempting to login without providing email and password");
     authPage.verifyDisabledAuthButton();
   });
 });

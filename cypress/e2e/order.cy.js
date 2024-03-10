@@ -29,81 +29,75 @@ describe("Order Placement", () => {
     orderPage.clickCreateAddressLink();
     addNewAddress();
     checkRadioButton();
-    orderPage.clickNextButton();
+    orderPage.clickBtnNext();
     orderPage.verifyAddressSuccessufullyAdded();
     checkRadioButton();
-    cy.get(".mat-focus-indicator .nextButton").click();
+    orderPage.clickNextButton();
     orderPage.expandPaymentOptions();
     addCardDetails();
     checkRadioButton();
-    cy.get(".mat-focus-indicator .nextButton").click();
+    orderPage.clickNextButton();
     orderPage.verifyCardSuccessufullyAdded();
     orderPage.clickFinalCheckoutButton();
     orderPage.verifyOrderSuccessMessage();
   });
 
   it("checking that the Add to Basket button is not present before login", () => {
-    cy.visit("/#/search");
+    orderPage.visitSearch();
     orderPage.verifyAdToBasketIsNotVisible();
   });
 
   it("Sold Out", () => {
     authPage.fillLoginForm(user.email, user.password);
-    cy.visit("/#/search");
-    cy.get(".btn-basket .mat-button-wrapper").eq(11).click();
+    orderPage.visitSearch();
+    orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifySoldOutMessage();
   });
 
   it("Only 1 left ", () => {
     authPage.fillLoginForm(user.email, user.password);
-    cy.visit("/#/search");
-    cy.get(".btn-basket .mat-button-wrapper").eq(3).click();
+    orderPage.visitSearch();
+    orderPage.addToCartBestJuiceShopSalesman();
     orderPage.verifyProductBestJuiceInCard();
-    cy.get(".btn-basket .mat-button-wrapper").eq(3).click();
+    orderPage.addToCartBestJuiceShopSalesman();
     orderPage.verifyLastProduct();
-    cy.visit("/#/basket");
-    cy.get(".mat-column-remove").eq(1).click();
+    orderPage.deleteProductFromBasket();
   });
 
   // MUST BE FIXED APPLICATION!!!
   it.skip("Only 3 left", () => {
     authPage.fillLoginForm(user.email, user.password);
-    cy.visit("/#/search");
-    cy.get(".btn-basket .mat-button-wrapper").eq(10).click();
+    orderPage.visitSearch();
+    orderPage.addToCartMelonBike();
     orderPage.verifyProductMelonBikeInCard();
-    cy.get(".btn-basket .mat-button-wrapper").eq(10).click();
+    orderPage.addToCartMelonBike();
     orderPage.verifyProductMelonBikeInCard();
-    cy.get(".btn-basket .mat-button-wrapper").eq(10).click();
+    orderPage.addToCartMelonBike();
     orderPage.verifyLastProduct();
     orderPage.deleteProductFromBasket();
   });
 
   it("Only 5 left", () => {
     authPage.fillLoginForm(user.email, user.password);
-    cy.visit("/#/search");
+    orderPage.visitSearch();
     orderPage.clickNextPage();
     cy.log("1 item");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyProductOWASPJuiceTShirtInCard();
-
     cy.log("2 items");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyAnotherProductOWASPJuiceTShirtInCard();
-
     cy.log("3 items");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyAnotherProductOWASPJuiceTShirtInCard();
     cy.wait(2000);
-
     cy.log("4 items");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyAnotherProductOWASPJuiceTShirtInCard();
     cy.wait(2000);
-
     cy.log("5 items");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyAnotherProductOWASPJuiceTShirtInCard();
-
     cy.log("6 items");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyOnly5Items();
@@ -119,15 +113,13 @@ describe("Order Placement", () => {
     orderPage.verifyBonusPointsMessage();
     orderPage.clickCheckoutButton();
     checkRadioButton();
-    orderPage.clickNextButton();
+    orderPage.clickBtnNext();
     checkRadioButton();
-    cy.get(".mat-focus-indicator .nextButton").click();
+    orderPage.clickNextButton();
     orderPage.expandPaymentOptions();
     addWrongCardDetails();
     orderPage.verifySubmitButtonIsDisabled();
-    cy.contains("Please enter a valid sixteen digit card number.").should(
-      "be.visible"
-    );
+    orderPage.verifyValidCardNumber();
     orderPage.deleteProductFromBasket();
   });
 
@@ -138,21 +130,21 @@ describe("Order Placement", () => {
     const productName = "Apple Juice";
 
     searchProductByName(productName);
-    cy.get(".btn-basket .mat-button-wrapper").eq(0).click();
+    orderPage.addToCartAppleJuice();
     orderPage.clickBasketLink();
     orderPage.verifyBonusPointsMessage();
     orderPage.clickCheckoutButton();
     orderPage.clickCreateAddressLink();
     addNewAddress();
     checkRadioButton();
-    orderPage.clickNextButton();
+    orderPage.clickBtnNext();
     orderPage.verifyAddressSuccessufullyAdded();
     checkRadioButton();
-    cy.get(".mat-focus-indicator .nextButton").click();
+    orderPage.clickNextButton();
     orderPage.expandPaymentOptions();
     addCardDetails();
     checkRadioButton();
-    cy.get(".mat-focus-indicator .nextButton").click();
+    orderPage.clickNextButton();
     orderPage.verifyCardSuccessufullyAdded();
     orderPage.clickFinalCheckoutButton();
     orderPage.verifyOrderSuccessMessage();
