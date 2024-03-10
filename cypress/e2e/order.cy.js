@@ -47,14 +47,14 @@ describe("Order Placement", () => {
     orderPage.verifyAdToBasketIsNotVisible();
   });
 
-  it("Sold Out", () => {
+  it("check adding to cart item with status sold Out", () => {
     authPage.fillLoginForm(user.email, user.password);
     orderPage.visitSearch();
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifySoldOutMessage();
   });
 
-  it("Only 1 left ", () => {
+  it("check adding to cart item with status only 1 left ", () => {
     authPage.fillLoginForm(user.email, user.password);
     orderPage.visitSearch();
     orderPage.addToCartBestJuiceShopSalesman();
@@ -65,7 +65,7 @@ describe("Order Placement", () => {
   });
 
   // MUST BE FIXED APPLICATION!!!
-  it.skip("Only 3 left", () => {
+  it.skip("check adding to cart item with status only 3 left", () => {
     authPage.fillLoginForm(user.email, user.password);
     orderPage.visitSearch();
     orderPage.addToCartMelonBike();
@@ -77,7 +77,7 @@ describe("Order Placement", () => {
     orderPage.deleteProductFromBasket();
   });
 
-  it("Only 5 left", () => {
+  it("check adding to cart item with status only 5 left", () => {
     authPage.fillLoginForm(user.email, user.password);
     orderPage.visitSearch();
     orderPage.clickNextPage();
@@ -105,7 +105,7 @@ describe("Order Placement", () => {
     orderPage.deleteProductFromBasket();
   });
 
-  it("Check the purchase with incorrect card data", () => {
+  it("check the purchase with incorrect card data", () => {
     authPage.fillLoginForm(user.email, user.password);
     orderPage.verifyProductsOnPage();
     orderPage.clickAddToBasketButton();
