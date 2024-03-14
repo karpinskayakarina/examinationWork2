@@ -1,0 +1,26 @@
+{
+  "name": "examinationwork2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cypress.config.js",
+  "scripts": {
+    "test": "npx cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karpinskayakarina/examinationWork2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/karpinskayakarina/examinationWork2/issues"
+  },
+  "homepage": "https://github.com/karpinskayakarina/examinationWork2#readme",
+  "devDependencies": {
+    "cypress": "^13.6.6",
+    "faker": "^5.5.3"
+  },
+  "dependencies": {
+    "mathjs": "^12.4.0"
+  }
+}
