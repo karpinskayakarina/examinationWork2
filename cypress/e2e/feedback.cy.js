@@ -1,15 +1,36 @@
 import AuthPage from "../support/pages/authPage";
 import OrderPage from "../support/pages/orderPage";
 import ContactPage from "../support/pages/contactPage";
-import user from "../fixtures/user.json";
+import faker from "faker";
+import LoginPage from "../support/pages/loginPage";
 
 const authPage = new AuthPage();
 const orderPage = new OrderPage();
 const contactPage = new ContactPage();
+const loginPage = new LoginPage();
 
 describe("Feedback", () => {
+  let user;
+
   beforeEach(() => {
-    authPage.visit();
+    user = {
+      email: faker.internet.email(),
+      password: "12345678",
+      passwordRepeat: "12345678",
+      securityAnswer: "23456",
+      securityQuestion: {
+        id: 6,
+        question: "Paternal grandmother's first name?",
+      },
+    };
+
+    cy.request({
+      method: "POST",
+      url: "https://juice-shop-sanitarskyi.herokuapp.com/api/Users/",
+      body: user,
+    });
+
+    loginPage.visitLogin();
     authPage.fillLoginForm(user.email, user.password);
     orderPage.verifyProductsOnPage();
   });

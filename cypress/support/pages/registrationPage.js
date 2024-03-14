@@ -7,19 +7,43 @@ class RegistrationPage {
     cy.get("#newCustomerLink").click();
   }
 
+  getEmailField() {
+    return cy.get("#emailControl");
+  }
+
+  getPasswordField() {
+    return cy.get("#passwordControl");
+  }
+
+  getRepeatPasswordField() {
+    return cy.get("#repeatPasswordControl");
+  }
+
+  getSecurityQuestionDropdown() {
+    return cy.get("#mat-select-0");
+  }
+
+  getSecurityAnswerField() {
+    return cy.get("#securityAnswerControl");
+  }
+
+  getRegisterButton() {
+    return cy.get("#registerButton .material-icons");
+  }
+
   fillRegistrationForm(
     email,
     password,
     securityAnswer,
     confirmPassword = password
   ) {
-    cy.get("#emailControl").type(email);
-    cy.get("#passwordControl").type(password);
-    cy.get("#repeatPasswordControl").type(confirmPassword);
-    cy.get("#mat-select-0").click();
+    this.getEmailField().type(email);
+    this.getPasswordField().type(password);
+    this.getRepeatPasswordField().type(confirmPassword);
+    this.getSecurityQuestionDropdown().click();
     cy.get("#mat-option-1").click();
-    cy.get("#securityAnswerControl").type(securityAnswer);
-    cy.get("#registerButton .material-icons").click();
+    this.getSecurityAnswerField().type(securityAnswer);
+    this.getRegisterButton().click();
   }
 
   verifyRegistrationSuccessMessage() {

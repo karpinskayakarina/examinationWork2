@@ -1,13 +1,28 @@
 export default class AuthPage {
-  visit() {
-    cy.visit("/#/login");
-    cy.closeBanners();
+  registerUser(user) {
+    cy.request({
+      method: "POST",
+      url: "/api/Users/",
+      body: user,
+    });
+  }
+
+  getLoginField() {
+    return cy.get("#email");
+  }
+
+  getPasswordField() {
+    return cy.get("#password");
+  }
+
+  getLoginButton() {
+    return cy.get("#loginButton");
   }
 
   fillLoginForm(email, password) {
-    cy.get("#email").type(email);
-    cy.get("#password").type(password);
-    cy.get("#loginButton").click();
+    this.getLoginField().type(email);
+    this.getPasswordField().type(password);
+    this.getLoginButton().click();
   }
 
   verifyLoginSuccessMessage() {
@@ -19,7 +34,7 @@ export default class AuthPage {
   }
 
   verifyDisabledAuthButton() {
-    cy.get("#loginButton").should("be.disabled");
+    this.getLoginButton().should("be.disabled");
   }
 
   clickRememberMe() {

@@ -3,13 +3,28 @@ export default class ContactPage {
     cy.visit("/#/contact");
   }
 
+  getCommentField() {
+    return cy.get("#comment");
+  }
+
+  getRatingField() {
+    return cy.get("#rating");
+  }
+
   fillFeedbackForm(comment) {
-    cy.get("#comment").type(comment);
-    cy.get("#rating").invoke("attr", "aria-valuenow", 3).click();
+    this.getCommentField().type(comment);
+    this.getRatingField().invoke("attr", "aria-valuenow", 3).click();
+    this.getRatingField().invoke("attr", "aria-valuenow", 2).click();
+    this.getRatingField().invoke("attr", "aria-valuenow", 1).click();
   }
 
   getCaptchaText() {
-    return cy.get("#captcha").invoke("text");
+    return cy
+      .get("#captcha")
+      .invoke("text")
+      .then((text) => {
+        return cy.wrap(text);
+      });
   }
 
   enterCaptchaResult(result) {

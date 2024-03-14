@@ -1,24 +1,44 @@
+import faker from "faker";
 import OrderPage from "../support/pages/orderPage";
-import {
-  addNewAddress,
-  addCardDetails,
-  checkRadioButton,
-  addWrongCardDetails,
-  searchProductByName,
-} from "../helper";
 import AuthPage from "../support/pages/authPage";
-import user from "../fixtures/user.json";
+import { addNewAddress } from "../helper";
+import LoginPage from "../support/pages/loginPage";
+import BasePage from "../support/pages/basePage";
+import HomePage from "../support/pages/homePage";
 
 const authPage = new AuthPage();
+const orderPage = new OrderPage();
+const loginPage = new LoginPage();
+const basePage = new BasePage();
+const homePage = new HomePage();
+
+let user;
 
 describe("Order Placement", () => {
-  const orderPage = new OrderPage();
-
   beforeEach(() => {
-    orderPage.visit();
+    user = {
+      email: faker.internet.email(),
+      password: "12345678",
+      passwordRepeat: "12345678",
+      securityAnswer: "23456",
+      securityQuestion: {
+        id: 6,
+        question: "Paternal grandmother's first name?",
+      },
+    };
+
+    cy.request({
+      method: "POST",
+      url: "/api/Users/",
+      body: user,
+    });
+
+    loginPage.visitLogin();
   });
 
   it("should place an order successfully with valid data", () => {
+    const productName = "Apple Juice";
+
     authPage.fillLoginForm(user.email, user.password);
     orderPage.verifyProductsOnPage();
     orderPage.clickAddToBasketButton();
@@ -28,14 +48,14 @@ describe("Order Placement", () => {
     orderPage.clickCheckoutButton();
     orderPage.clickCreateAddressLink();
     addNewAddress();
-    checkRadioButton();
+    basePage.checkRadioButton();
     orderPage.clickBtnNext();
     orderPage.verifyAddressSuccessufullyAdded();
-    checkRadioButton();
+    basePage.checkRadioButton();
     orderPage.clickNextButton();
     orderPage.expandPaymentOptions();
-    addCardDetails();
-    checkRadioButton();
+    orderPage.addCardDetails();
+    basePage.checkRadioButton();
     orderPage.clickNextButton();
     orderPage.verifyCardSuccessufullyAdded();
     orderPage.clickFinalCheckoutButton();
@@ -43,20 +63,20 @@ describe("Order Placement", () => {
   });
 
   it("checking that the Add to Basket button is not present before login", () => {
-    orderPage.visitSearch();
+    homePage.visit();
     orderPage.verifyAdToBasketIsNotVisible();
   });
 
   it("check adding to cart item with status sold Out", () => {
     authPage.fillLoginForm(user.email, user.password);
-    orderPage.visitSearch();
+    homePage.visit();
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifySoldOutMessage();
   });
 
   it("check adding to cart item with status only 1 left ", () => {
     authPage.fillLoginForm(user.email, user.password);
-    orderPage.visitSearch();
+    homePage.visit();
     orderPage.addToCartBestJuiceShopSalesman();
     orderPage.verifyProductBestJuiceInCard();
     orderPage.addToCartBestJuiceShopSalesman();
@@ -64,40 +84,41 @@ describe("Order Placement", () => {
     orderPage.deleteProductFromBasket();
   });
 
-  // MUST BE FIXED APPLICATION!!!
-  it.skip("check adding to cart item with status only 3 left", () => {
+  it("check adding to cart item with status only 3 left and user can buy just 1 product", () => {
     authPage.fillLoginForm(user.email, user.password);
-    orderPage.visitSearch();
+    homePage.visit();
     orderPage.addToCartMelonBike();
     orderPage.verifyProductMelonBikeInCard();
     orderPage.addToCartMelonBike();
-    orderPage.verifyProductMelonBikeInCard();
-    orderPage.addToCartMelonBike();
-    orderPage.verifyLastProduct();
+    orderPage.verifyOnly1Item();
     orderPage.deleteProductFromBasket();
   });
 
   it("check adding to cart item with status only 5 left", () => {
+    cy.intercept("GET", "/api/Products/*").as("Products");
     authPage.fillLoginForm(user.email, user.password);
-    orderPage.visitSearch();
+    homePage.visit();
     orderPage.clickNextPage();
     cy.log("1 item");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyProductOWASPJuiceTShirtInCard();
+    cy.wait("@Products");
     cy.log("2 items");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyAnotherProductOWASPJuiceTShirtInCard();
+    cy.wait("@Products");
     cy.log("3 items");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyAnotherProductOWASPJuiceTShirtInCard();
-    cy.wait(2000);
+    cy.wait("@Products");
     cy.log("4 items");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyAnotherProductOWASPJuiceTShirtInCard();
-    cy.wait(2000);
+    cy.wait("@Products");
     cy.log("5 items");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyAnotherProductOWASPJuiceTShirtInCard();
+    cy.wait("@Products");
     cy.log("6 items");
     orderPage.addOWASPJuiceTShirtInCardToCart();
     orderPage.verifyOnly5Items();
@@ -112,12 +133,14 @@ describe("Order Placement", () => {
     orderPage.clickBasketLink();
     orderPage.verifyBonusPointsMessage();
     orderPage.clickCheckoutButton();
-    checkRadioButton();
+    orderPage.clickCreateAddressLink();
+    addNewAddress();
+    basePage.checkRadioButton();
     orderPage.clickBtnNext();
-    checkRadioButton();
+    basePage.checkRadioButton();
     orderPage.clickNextButton();
     orderPage.expandPaymentOptions();
-    addWrongCardDetails();
+    orderPage.addWrongCardDetails();
     orderPage.verifySubmitButtonIsDisabled();
     orderPage.verifyValidCardNumber();
     orderPage.deleteProductFromBasket();
@@ -129,21 +152,21 @@ describe("Order Placement", () => {
 
     const productName = "Apple Juice";
 
-    searchProductByName(productName);
+    orderPage.searchProductByName(productName);
     orderPage.addToCartAppleJuice();
     orderPage.clickBasketLink();
     orderPage.verifyBonusPointsMessage();
     orderPage.clickCheckoutButton();
     orderPage.clickCreateAddressLink();
     addNewAddress();
-    checkRadioButton();
+    basePage.checkRadioButton();
     orderPage.clickBtnNext();
     orderPage.verifyAddressSuccessufullyAdded();
-    checkRadioButton();
+    basePage.checkRadioButton();
     orderPage.clickNextButton();
     orderPage.expandPaymentOptions();
-    addCardDetails();
-    checkRadioButton();
+    orderPage.addCardDetails();
+    basePage.checkRadioButton();
     orderPage.clickNextButton();
     orderPage.verifyCardSuccessufullyAdded();
     orderPage.clickFinalCheckoutButton();

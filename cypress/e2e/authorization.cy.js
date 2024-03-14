@@ -1,13 +1,18 @@
 import { TestData } from "../fixtures/constants";
 import AuthPage from "../support/pages/authPage";
-import user from "../fixtures/user.json";
+import { registerUser } from "../support/userRegistration";
+import LoginPage from "../support/pages/loginPage";
 
 describe("Authorization", () => {
+  const loginPage = new LoginPage();
   const authPage = new AuthPage();
+  let user;
 
   beforeEach(() => {
+    user = registerUser();
+
     cy.log("Visiting the authorization page");
-    authPage.visit();
+    loginPage.visitLogin();
   });
 
   it("should login with valid credentials", () => {

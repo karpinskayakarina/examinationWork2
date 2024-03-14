@@ -1,15 +1,6 @@
 import { apiEndpoints } from "../endpoints";
 
 export default class OrderPage {
-  visitLogin() {
-    cy.visit("/#/login");
-    cy.closeBanners();
-  }
-
-  visitSearch() {
-    cy.visit("/#/search");
-  }
-
   verifyProductsOnPage() {
     cy.intercept(apiEndpoints.products).as("products");
     cy.wait("@products").then((interception) => {
@@ -18,11 +9,11 @@ export default class OrderPage {
   }
 
   clickAddToBasketButton() {
-    cy.get(".btn-basket .mat-button-wrapper").eq(0).click();
+    this.getAddToBasketButton().click();
   }
 
   clickBasketLink() {
-    cy.get("[routerLink='/basket']").click();
+    this.getBasketLink().click();
   }
 
   verifyProductAppleInCard() {
@@ -38,19 +29,19 @@ export default class OrderPage {
   }
 
   clickCheckoutButton() {
-    cy.get("#checkoutButton").click({ force: true });
+    this.getCheckoutButton().click({ force: true });
   }
 
   clickCreateAddressLink() {
-    cy.get("[routerLink='/address/create']").click();
+    this.getCreateAddressLink().click();
   }
 
   clickBtnNext() {
-    cy.get(".mat-focus-indicator .btn-next").click();
+    this.getBtnNext().click();
   }
 
   clickNextButton() {
-    cy.get(".mat-focus-indicator .nextButton").click();
+    this.getNextButton().click();
   }
 
   verifyAddressSuccessufullyAdded() {
@@ -60,11 +51,11 @@ export default class OrderPage {
   }
 
   clickSubmitButton() {
-    cy.get(".submitButton").click();
+    this.getSubmitButton().click();
   }
 
   expandPaymentOptions() {
-    cy.get("#mat-expansion-panel-header-0").click();
+    this.getPaymentOptions().click();
   }
 
   verifyCardSuccessufullyAdded() {
@@ -74,7 +65,7 @@ export default class OrderPage {
   }
 
   clickFinalCheckoutButton() {
-    cy.get("#checkoutButton").click();
+    this.getFinalCheckoutButton().click();
   }
 
   verifyOrderSuccessMessage() {
@@ -98,7 +89,7 @@ export default class OrderPage {
   }
 
   addOWASPJuiceTShirtInCardToCart() {
-    cy.get(".btn-basket .mat-button-wrapper").eq(11).click();
+    this.getOWASPJuiceTShirtInCardButton().click();
   }
 
   verifyProductOWASPJuiceTShirtInCard() {
@@ -114,7 +105,7 @@ export default class OrderPage {
   }
 
   addToCartMelonBike() {
-    cy.get(".btn-basket .mat-button-wrapper").eq(10).click();
+    this.getMelonBikeButton().click();
   }
 
   verifyProductMelonBikeInCard() {
@@ -129,6 +120,12 @@ export default class OrderPage {
     );
   }
 
+  verifyOnly1Item() {
+    cy.contains("You can order only up to 1 items of this product.").should(
+      "be.visible"
+    );
+  }
+
   verifyOnly5Items() {
     cy.contains("You can order only up to 5 items of this product.").should(
       "be.visible"
@@ -136,29 +133,108 @@ export default class OrderPage {
   }
 
   clickNextPage() {
-    cy.get('[aria-label="Next page"]').click();
+    this.getNextPageButton().click();
   }
 
   deleteProductFromBasket() {
     cy.visit("/#/basket");
-    cy.get(".mat-column-remove").eq(1).click();
+    this.getRemoveProductButton().click();
   }
 
   verifySubmitButtonIsDisabled() {
-    cy.get("#submitButton").should("be.disabled");
+    this.getSubmitButton().should("be.disabled");
   }
 
   addToCartBestJuiceShopSalesman() {
-    cy.get(".btn-basket .mat-button-wrapper").eq(3).click();
+    this.getBestJuiceShopSalesmanButton().click();
   }
 
   addToCartAppleJuice() {
-    cy.get(".btn-basket .mat-button-wrapper").eq(0).click();
+    this.getAppleJuiceButton().click();
   }
 
   verifyValidCardNumber() {
     cy.contains("Please enter a valid sixteen digit card number.").should(
       "be.visible"
     );
+  }
+
+  addCardDetails() {
+    cy.get("#mat-input-10").type("TEST TEST");
+    cy.get("#mat-input-11").type("8768876887688768");
+    cy.get("#mat-input-12").select("1");
+    cy.get("#mat-input-13").select("2080");
+    cy.get("#submitButton").click();
+  }
+
+  addWrongCardDetails() {
+    cy.get("#mat-input-10").type("TEST TEST");
+    cy.get("#mat-input-11").type("1");
+    cy.get("#mat-input-12").select("1");
+    cy.get("#mat-input-13").select("2080");
+  }
+
+  searchProductByName(productName) {
+    cy.get(".mat-search_icon-search").type(productName + "{enter}");
+  }
+
+  getAddToBasketButton() {
+    return cy.get(".btn-basket .mat-button-wrapper").eq(0);
+  }
+
+  getBasketLink() {
+    return cy.get("[routerLink='/basket']");
+  }
+
+  getCheckoutButton() {
+    return cy.get("#checkoutButton");
+  }
+
+  getCreateAddressLink() {
+    return cy.get("[routerLink='/address/create']");
+  }
+
+  getBtnNext() {
+    return cy.get(".mat-focus-indicator .btn-next");
+  }
+
+  getNextButton() {
+    return cy.get(".mat-focus-indicator .nextButton");
+  }
+
+  getSubmitButton() {
+    return cy.get("#submitButton");
+  }
+
+  getPaymentOptions() {
+    return cy.get("#mat-expansion-panel-header-0");
+  }
+
+  getFinalCheckoutButton() {
+    return cy.get("#checkoutButton");
+  }
+
+  getOWASPJuiceTShirtInCardButton() {
+    return cy.get(".btn-basket .mat-button-wrapper").eq(11);
+  }
+
+  getMelonBikeButton() {
+    return cy.get(".btn-basket .mat-button-wrapper").eq(10);
+  }
+
+  getNextPageButton() {
+    return cy.get('[aria-label="Next page"]');
+  }
+
+  getRemoveProductButton() {
+    return cy.get(".mat-column-remove").eq(1);
+  }
+
+  getBestJuiceShopSalesmanButton() {
+    return cy.get(".btn-basket .mat-button-wrapper").eq(3);
+  }
+
+  getAppleJuiceButton() {
+    return cy.get(".btn-basket .mat-button-wrapper").eq(0);
   }
 }

@@ -3,7 +3,11 @@ export default class ReviewPage {
     cy.visit("/#/search");
   }
 
+  getProductElement(index) {
+    return cy.get(".product").eq(index);
+  }
+
   addToCartApplePomace() {
-    cy.get(".product").eq(1).click();
+    this.getProductElement(1).click();
   }
 }
